@@ -5,12 +5,16 @@ import io.wechat.response.*;
 import io.wechat.service.WechatService;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
 public class WechatServiceImplTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(WechatServiceImplTest.class);
 
     @Test
     public void getUUID() throws Exception {
@@ -39,6 +43,7 @@ public class WechatServiceImplTest {
 
         UuidResponse uuidResponse = wechatService.getUUID(UuidRequest.defaultInstance());
         GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(uuidResponse.getUuid());
+        logger.info("点击如下链接扫码：" + generateQrcodeRequest.getRequestUrl());
         GenerateQrcodeResponse qrcode = wechatService.getQrcode(generateQrcodeRequest);
 
         File file = new File("qrcode.jpg");
@@ -59,6 +64,7 @@ public class WechatServiceImplTest {
 
         UuidResponse uuidResponse = wechatService.getUUID(UuidRequest.defaultInstance());
         GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(uuidResponse.getUuid());
+        logger.info("点击如下链接扫码：" + generateQrcodeRequest.getRequestUrl());
         GenerateQrcodeResponse qrcode = wechatService.getQrcode(generateQrcodeRequest);
 
         File file = new File("qrcode.jpg");
@@ -83,6 +89,7 @@ public class WechatServiceImplTest {
 
         UuidResponse uuidResponse = wechatService.getUUID(UuidRequest.defaultInstance());
         GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(uuidResponse.getUuid());
+        logger.info("点击如下链接扫码：" + generateQrcodeRequest.getRequestUrl());
         GenerateQrcodeResponse qrcode = wechatService.getQrcode(generateQrcodeRequest);
 
         File file = new File("qrcode.jpg");
@@ -109,6 +116,7 @@ public class WechatServiceImplTest {
 
         UuidResponse uuidResponse = wechatService.getUUID(UuidRequest.defaultInstance());
         GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(uuidResponse.getUuid());
+        logger.info("点击如下链接扫码：" + generateQrcodeRequest.getRequestUrl());
         GenerateQrcodeResponse qrcode = wechatService.getQrcode(generateQrcodeRequest);
 
         File file = new File("qrcode.jpg");
