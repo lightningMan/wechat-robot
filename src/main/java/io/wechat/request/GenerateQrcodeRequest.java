@@ -1,34 +1,27 @@
 package io.wechat.request;
 
+import io.wechat.session.WechatSession;
 import lombok.Data;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class GenerateQrcodeRequest implements WechatRequest {
-    private String uuid;
-    private String type;
-    private long timestamp;
-
+public class GenerateQrcodeRequest extends AbstractWechatRequest implements WechatRequest {
     @Override
     public String getRequestUrl() {
-        return "https://login.weixin.qq.com/qrcode/" + uuid;
+        return "https://login.weixin.qq.com/qrcode/" + getUuid();
     }
 
     @Override
     public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = super.toMap();
 
-        map.put("t", type);
-        map.put("_", timestamp);
+        map.put("t", getType());
 
         return map;
     }
 
-    public GenerateQrcodeRequest(String uuid) {
-        this.uuid = uuid;
-        timestamp = System.currentTimeMillis();
-        type = "webwx";
+    public GenerateQrcodeRequest(WechatSession wechatSession) {
+        super(wechatSession);
     }
 }

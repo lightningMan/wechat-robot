@@ -3,35 +3,37 @@ package io.wechat.service.impl;
 import io.wechat.request.*;
 import io.wechat.response.*;
 import io.wechat.service.WechatService;
+import io.wechat.session.WechatSession;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 public class WechatServiceImplTest {
 
     private static final Logger logger = LoggerFactory.getLogger(WechatServiceImplTest.class);
 
+
     @Test
     public void getUUID() throws Exception {
         WechatService wechatService = new WechatServiceImpl();
-
-        UuidResponse uuidResponse = wechatService.getUUID(UuidRequest.defaultInstance());
+        WechatSession wechatSession = WechatSession.defaultInstance();
+        UuidRequest uuidRequest = new UuidRequest(wechatSession);
+        UuidResponse uuidResponse = wechatService.getUUID(uuidRequest);
 
         Assert.assertTrue(uuidResponse.success());
-        Assert.assertTrue(!StringUtils.isEmpty(uuidResponse.getUuid()));
+        Assert.assertTrue(!StringUtils.isEmpty(wechatSession.getUuid()));
     }
 
     @Test
     public void getQrcode() throws Exception {
         WechatService wechatService = new WechatServiceImpl();
+        WechatSession wechatSession = WechatSession.defaultInstance();
+        UuidRequest uuidRequest = new UuidRequest(wechatSession);
+        wechatService.getUUID(uuidRequest);
 
-        UuidResponse uuidResponse = wechatService.getUUID(UuidRequest.defaultInstance());
-        GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(uuidResponse.getUuid());
+        GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(wechatSession);
         GenerateQrcodeResponse qrcode = wechatService.getQrcode(generateQrcodeRequest);
 
         Assert.assertTrue(qrcode.success());
@@ -40,20 +42,14 @@ public class WechatServiceImplTest {
     @Test
     public void getScanQrcodeStatus() throws Exception {
         WechatService wechatService = new WechatServiceImpl();
-
-        UuidResponse uuidResponse = wechatService.getUUID(UuidRequest.defaultInstance());
-        GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(uuidResponse.getUuid());
+        WechatSession wechatSession = WechatSession.defaultInstance();
+        UuidRequest uuidRequest = new UuidRequest(wechatSession);
+        wechatService.getUUID(uuidRequest);
+        GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(wechatSession);
         logger.info("点击如下链接扫码：" + generateQrcodeRequest.getRequestUrl());
-        GenerateQrcodeResponse qrcode = wechatService.getQrcode(generateQrcodeRequest);
 
-        File file = new File("qrcode.jpg");
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        fileOutputStream.write(qrcode.getData());
-        fileOutputStream.close();
-        GetScanQrcodeStatusRequest getScanQrcodeStatusRequest = new GetScanQrcodeStatusRequest(uuidResponse.getUuid());
+
+        GetScanQrcodeStatusRequest getScanQrcodeStatusRequest = new GetScanQrcodeStatusRequest(wechatSession);
         GetScanQrcodeStatusResponse scanQrcodeStatus = wechatService.getScanQrcodeStatus(getScanQrcodeStatusRequest);
         Assert.assertTrue("你可能没有扫码", scanQrcodeStatus.success());
     }
@@ -61,24 +57,17 @@ public class WechatServiceImplTest {
     @Test
     public void getGetConfirmLoginResponse() throws Exception {
         WechatService wechatService = new WechatServiceImpl();
-
-        UuidResponse uuidResponse = wechatService.getUUID(UuidRequest.defaultInstance());
-        GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(uuidResponse.getUuid());
+        WechatSession wechatSession = WechatSession.defaultInstance();
+        UuidRequest uuidRequest = new UuidRequest(wechatSession);
+        wechatService.getUUID(uuidRequest);
+        GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(wechatSession);
         logger.info("点击如下链接扫码：" + generateQrcodeRequest.getRequestUrl());
-        GenerateQrcodeResponse qrcode = wechatService.getQrcode(generateQrcodeRequest);
 
-        File file = new File("qrcode.jpg");
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        fileOutputStream.write(qrcode.getData());
-        fileOutputStream.flush();
-        fileOutputStream.close();
-        GetScanQrcodeStatusRequest getScanQrcodeStatusRequest = new GetScanQrcodeStatusRequest(uuidResponse.getUuid());
+
+        GetScanQrcodeStatusRequest getScanQrcodeStatusRequest = new GetScanQrcodeStatusRequest(wechatSession);
         wechatService.getScanQrcodeStatus(getScanQrcodeStatusRequest);
 
-        GetConfirmLoginRequest getConfirmLoginRequest = new GetConfirmLoginRequest(uuidResponse.getUuid());
+        GetConfirmLoginRequest getConfirmLoginRequest = new GetConfirmLoginRequest(wechatSession);
         GetConfirmLoginResponse getConfirmLoginResponse = wechatService.getGetConfirmLoginResponse(getConfirmLoginRequest);
         Assert.assertTrue("你可能没有确认登录!", getConfirmLoginResponse.success());
     }
@@ -86,65 +75,45 @@ public class WechatServiceImplTest {
     @Test
     public void login() throws Exception {
         WechatService wechatService = new WechatServiceImpl();
-
-        UuidResponse uuidResponse = wechatService.getUUID(UuidRequest.defaultInstance());
-        GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(uuidResponse.getUuid());
+        WechatSession wechatSession = WechatSession.defaultInstance();
+        UuidRequest uuidRequest = new UuidRequest(wechatSession);
+        wechatService.getUUID(uuidRequest);
+        GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(wechatSession);
         logger.info("点击如下链接扫码：" + generateQrcodeRequest.getRequestUrl());
-        GenerateQrcodeResponse qrcode = wechatService.getQrcode(generateQrcodeRequest);
 
-        File file = new File("qrcode.jpg");
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        fileOutputStream.write(qrcode.getData());
-        fileOutputStream.flush();
-        fileOutputStream.close();
-        GetScanQrcodeStatusRequest getScanQrcodeStatusRequest = new GetScanQrcodeStatusRequest(uuidResponse.getUuid());
+
+        GetScanQrcodeStatusRequest getScanQrcodeStatusRequest = new GetScanQrcodeStatusRequest(wechatSession);
         wechatService.getScanQrcodeStatus(getScanQrcodeStatusRequest);
 
-        GetConfirmLoginRequest getConfirmLoginRequest = new GetConfirmLoginRequest(uuidResponse.getUuid());
+        GetConfirmLoginRequest getConfirmLoginRequest = new GetConfirmLoginRequest(wechatSession);
         GetConfirmLoginResponse getConfirmLoginResponse = wechatService.getGetConfirmLoginResponse(getConfirmLoginRequest);
+        Assert.assertTrue("你可能没有确认登录!", getConfirmLoginResponse.success());
 
-        LoginResponse loginResponse = wechatService.login(new LoginRequest(getConfirmLoginResponse.getRedirectUrl()));
+        LoginResponse loginResponse = wechatService.login(new LoginRequest(wechatSession));
         Assert.assertTrue("登录失败", loginResponse.success());
     }
 
     @Test
     public void init() throws Exception {
         WechatService wechatService = new WechatServiceImpl();
-
-        UuidResponse uuidResponse = wechatService.getUUID(UuidRequest.defaultInstance());
-        GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(uuidResponse.getUuid());
+        WechatSession wechatSession = WechatSession.defaultInstance();
+        UuidRequest uuidRequest = new UuidRequest(wechatSession);
+        wechatService.getUUID(uuidRequest);
+        GenerateQrcodeRequest generateQrcodeRequest = new GenerateQrcodeRequest(wechatSession);
         logger.info("点击如下链接扫码：" + generateQrcodeRequest.getRequestUrl());
-        GenerateQrcodeResponse qrcode = wechatService.getQrcode(generateQrcodeRequest);
 
-        File file = new File("qrcode.jpg");
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        fileOutputStream.write(qrcode.getData());
-        fileOutputStream.flush();
-        fileOutputStream.close();
-        GetScanQrcodeStatusRequest getScanQrcodeStatusRequest = new GetScanQrcodeStatusRequest(uuidResponse.getUuid());
+
+        GetScanQrcodeStatusRequest getScanQrcodeStatusRequest = new GetScanQrcodeStatusRequest(wechatSession);
         wechatService.getScanQrcodeStatus(getScanQrcodeStatusRequest);
 
-        GetConfirmLoginRequest getConfirmLoginRequest = new GetConfirmLoginRequest(uuidResponse.getUuid());
+        GetConfirmLoginRequest getConfirmLoginRequest = new GetConfirmLoginRequest(wechatSession);
         GetConfirmLoginResponse getConfirmLoginResponse = wechatService.getGetConfirmLoginResponse(getConfirmLoginRequest);
+        Assert.assertTrue("你可能没有确认登录!", getConfirmLoginResponse.success());
 
-        LoginResponse loginResponse = wechatService.login(new LoginRequest(getConfirmLoginResponse.getRedirectUrl()));
+        LoginResponse loginResponse = wechatService.login(new LoginRequest(wechatSession));
+        Assert.assertTrue("登录失败", loginResponse.success());
 
-        InitRequest initRequest = new InitRequest();
-
-
-        initRequest.setCookie(loginResponse.getCookie());
-        initRequest.setDeviceId(loginResponse.getDeviceId());
-        initRequest.setPassTicket(loginResponse.getPassTicket());
-        initRequest.setSid(loginResponse.getSid());
-        initRequest.setSKey(loginResponse.getSKey());
-        initRequest.setTimestamp(System.currentTimeMillis());
-        initRequest.setUin(loginResponse.getUin());
+        InitRequest initRequest = new InitRequest(wechatSession);
 
         InitResponse initResponse = wechatService.init(initRequest);
 

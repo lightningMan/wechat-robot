@@ -39,8 +39,9 @@ public class WechatServiceImpl extends AbstractWechatService implements WechatSe
 
         String uuid = responseArray[1].split(" ")[3].split("\"")[1];
 
-        uuidResponse.setUuid(uuid);
         uuidResponse.makeSuccess();
+
+        uuidRequest.getWechatSession().setUuid(uuid);
 
         return uuidResponse;
     }
@@ -88,7 +89,8 @@ public class WechatServiceImpl extends AbstractWechatService implements WechatSe
 
         // 已扫描成功
         if (CONFIRM_LOGIN_CODE.equals(code)) {
-            response.makeSuccess(string.substring(38, string.length() - 2) + "&fun=new");
+            request.getWechatSession().setRedirectUri(string.substring(38, string.length() - 2) + "&fun=new");
+            response.makeSuccess();
         } else {
             response.makeFail();
         }
@@ -106,14 +108,14 @@ public class WechatServiceImpl extends AbstractWechatService implements WechatSe
         if (httpResponse == null) {
             loginResponse.makeFail();
         } else {
-            loginResponse.setCookie(Util.getCookie(httpResponse.getHeaders().get("Set-Cookie")));
+            loginRequest.getWechatSession().setCookie(Util.getCookie(httpResponse.getHeaders().get("Set-Cookie")));
             String body = httpResponse.getStringBody();
 
-            loginResponse.setSKey(Util.extractString("<skey>(\\S+)</skey>", body));
-            loginResponse.setSid(Util.extractString("<wxsid>(\\S+)</wxsid>", body));
-            loginResponse.setUin(Util.extractString("<wxuin>(\\S+)</wxuin>", body));
-            loginResponse.setPassTicket(Util.extractString("<pass_ticket>(\\S+)</pass_ticket>", body));
-            loginResponse.setDeviceId("e" + System.currentTimeMillis());
+            loginRequest.getWechatSession().setSKey(Util.extractString("<skey>(\\S+)</skey>", body));
+            loginRequest.getWechatSession().setSid(Util.extractString("<wxsid>(\\S+)</wxsid>", body));
+            loginRequest.getWechatSession().setUin(Util.extractString("<wxuin>(\\S+)</wxuin>", body));
+            loginRequest.getWechatSession().setPassTicket(Util.extractString("<pass_ticket>(\\S+)</pass_ticket>", body));
+            loginRequest.getWechatSession().setDeviceId("e" + System.currentTimeMillis());
 
             loginResponse.makeSuccess();
 

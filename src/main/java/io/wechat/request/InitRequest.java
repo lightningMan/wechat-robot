@@ -1,39 +1,22 @@
 package io.wechat.request;
 
+import io.wechat.session.WechatSession;
 import lombok.Data;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class InitRequest implements WechatRequest {
-    public static final String DEFAULT_WX_HOST = "wx.qq.com";
+public class InitRequest extends AbstractWechatRequest implements WechatRequest {
 
-    private String cookie;
-
-    private String wxHost;
-
-    private String passTicket;
-
-    private String sKey;
-
-    private String uin;
-
-    private String sid;
-
-    private String deviceId;
-
-
-    private long timestamp;
-
+    public InitRequest(WechatSession wechatSession) {
+        super(wechatSession);
+    }
 
     @Override
     public String getRequestUrl() {
-        if (wxHost == null) {
-            wxHost = DEFAULT_WX_HOST;
-        }
 
-        return "https://" + wxHost + "/cgi-bin/mmwebwx-bin/webwxinit?pass_ticket=" + passTicket + "&skey=" + sKey + "&r=" + timestamp;
+        return "https://" + getWxHost() + "/cgi-bin/mmwebwx-bin/webwxinit?pass_ticket=" + getPassTicket() + "&skey=" + getSKey() + "&r=" + System.currentTimeMillis();
     }
 
     @Override
@@ -41,10 +24,10 @@ public class InitRequest implements WechatRequest {
         Map<String, Object> map = new HashMap<>();
 
         HashMap<String, Object> baseRequest = new HashMap<>();
-        baseRequest.put("Uin", uin);
-        baseRequest.put("Sid", sid);
-        baseRequest.put("SKey", sKey);
-        baseRequest.put("DeviceID", deviceId);
+        baseRequest.put("Uin", getUin());
+        baseRequest.put("Sid", getSid());
+        baseRequest.put("SKey", getSKey());
+        baseRequest.put("DeviceID", getDeviceId());
 
 
         map.put("BaseRequest", baseRequest);

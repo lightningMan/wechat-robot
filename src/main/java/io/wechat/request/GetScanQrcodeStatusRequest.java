@@ -1,21 +1,15 @@
 package io.wechat.request;
 
+import io.wechat.session.WechatSession;
 import lombok.Data;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class GetScanQrcodeStatusRequest implements WechatRequest {
-    private int tip;
-    private String uuid;
-    private long timestamp;
+public class GetScanQrcodeStatusRequest extends AbstractWechatRequest implements WechatRequest {
 
-
-    public GetScanQrcodeStatusRequest(String uuid) {
-        this.uuid = uuid;
-        tip = 1;
-        timestamp = System.currentTimeMillis();
+    public GetScanQrcodeStatusRequest(WechatSession wechatSession) {
+        super(wechatSession);
     }
 
     @Override
@@ -26,11 +20,10 @@ public class GetScanQrcodeStatusRequest implements WechatRequest {
 
     @Override
     public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = super.toMap();
 
-        map.put("tip", tip);
-        map.put("uuid", uuid);
-        map.put("_", timestamp);
+        map.put("tip", 1);
+        map.put("uuid", getUuid());
 
         return map;
     }

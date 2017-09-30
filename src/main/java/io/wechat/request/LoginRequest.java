@@ -1,18 +1,18 @@
 package io.wechat.request;
 
+import io.wechat.session.WechatSession;
 import lombok.Data;
 
 @Data
-public class LoginRequest implements WechatRequest {
-    private String redirectUri;
+public class LoginRequest extends AbstractWechatRequest implements WechatRequest {
 
 
-    public LoginRequest(String redirectUri) {
-        this.redirectUri = redirectUri;
+    public LoginRequest(WechatSession wechatSession) {
+        super(wechatSession);
     }
 
     @Override
     public String getRequestUrl() {
-        return redirectUri;
+        return getRedirectUri();
     }
 }
