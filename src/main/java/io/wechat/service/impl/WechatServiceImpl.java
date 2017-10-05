@@ -90,6 +90,9 @@ public class WechatServiceImpl extends AbstractWechatService implements WechatSe
         // 已扫描成功
         if (CONFIRM_LOGIN_CODE.equals(code)) {
             request.getWechatSession().setRedirectUri(string.substring(38, string.length() - 2) + "&fun=new");
+            String redirectUri = Util.extractString("window.redirect_uri=\"(\\S+?)\";", string) + "&fun=new";
+            request.getWechatSession().setRedirectUri(redirectUri);
+            request.getWechatSession().setWxHost(redirectUri.split("://")[1].split("/")[0]);
             response.makeSuccess();
         } else {
             response.makeFail();

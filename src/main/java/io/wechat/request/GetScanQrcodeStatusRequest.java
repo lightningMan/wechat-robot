@@ -15,7 +15,7 @@ public class GetScanQrcodeStatusRequest extends AbstractWechatRequest implements
     @Override
     public String getRequestUrl() {
 
-        return "https://login.wx.qq.com/cgi-bin/mmwebwx-bin/login";
+        return "https://login." + getWxHost() + "/cgi-bin/mmwebwx-bin/login";
     }
 
     @Override
